@@ -1,0 +1,631 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Desafío del IVA con Cartas</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f0f2f5;
+      text-align: center;
+      padding: 20px;
+    }
+    #inicio {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 30px;
+  gap: 15px;
+  background-color: #f4f4f4;
+  border-radius: 16px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  max-width: 400px;
+  margin: 40px auto;
+}
+
+#inicio input[type="text"] {
+  width: 100%;
+  padding: 12px;
+  font-size: 16px;
+  border: 2px solid #ccc;
+  border-radius: 8px;
+  outline: none;
+  transition: 0.2s;
+}
+
+#inicio input[type="text"]:focus {
+  border-color: #007BFF;
+  box-shadow: 0 0 5px #007BFF44;
+}
+
+#inicio button {
+  padding: 12px 20px;
+  font-size: 16px;
+  border: none;
+  background-color: #007BFF;
+  color: white;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+  width: 100%;
+}
+
+#inicio button:hover
+
+    h1 {
+      color: #2c3e50;
+    }
+    .vidas, .tiempo {
+      font-size: 20px;
+      margin: 10px;
+    }
+    #vidas{
+        color: red;
+        font-size: 4rem;
+    }
+    #jugador {
+      font-size: 18px;
+      margin-top: 10px;
+    }
+    #tablero {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+      gap: 15px;
+      margin: 20px auto;
+      max-width: 600px;
+    }
+    .carta {
+      background-color: #3498db;
+      color: white;
+      padding: 30px 0;
+      border-radius: 10px;
+      cursor: pointer;
+      font-size: 18px;
+      transition: background-color 0.3s;
+    }
+    .carta:hover {
+      background-color: #2980b9;
+    }
+    .pregunta, .mensaje {
+      margin: 20px 0;
+      font-size: 20px;
+    }
+    .respuestas {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      max-width: 400px;
+      margin: auto;
+    }
+    .respuesta {
+      background-color: #1abc9c;
+      color: white;
+      padding: 12px;
+      border: none;
+      border-radius: 5px;
+      font-size: 16px;
+      cursor: pointer;
+      margin: 10px 5px;
+    }
+    .respuesta:disabled {
+      background-color: #bdc3c7;
+      cursor: default;
+    }
+    #reiniciar {
+      margin-top: 20px;
+      padding: 10px 20px;
+      font-size: 16px;
+      background-color: #e67e22;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      display: none;
+      cursor: pointer;
+      
+    }
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 10;
+      left: 0; top: 0;
+      width: 100%; height: 100%;
+      background-color: rgba(0, 0, 0, 0.6);
+      justify-content: center;
+      align-items: center;
+    }
+    .modal-content {
+      background-color: white;
+      padding: 20px;
+      border-radius: 12px;
+      text-align: center;
+      width: 90%;
+      max-width: 500px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+    }
+    .close {
+      position: absolute;
+      right: 20px;
+      top: 10px;
+      font-size: 28px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+   .mostrarRanking{
+          padding: 12px 20px;
+    font-size: 16px;
+    border: none;
+    background-color: #007BFF;
+    color: white;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+    width: 40%;
+    }
+    .modal {
+  display: none;
+  position: fixed;
+  z-index: 999;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0,0,0,0.7);
+  justify-content: center;
+  align-items: center;
+}
+
+.modal-contenido {
+  background: #fff;
+  width: 90%;
+  max-width: 500px;
+  padding: 30px;
+  border-radius: 20px;
+  text-align: center;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+  position: relative;
+  transition: transform 0.3s ease;
+  animation: slideIn 0.4s ease;
+}
+
+@keyframes slideIn {
+  from { transform: translateY(-50px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+.cerrar {
+  position: absolute;
+  top: 15px;
+  right: 20px;
+  font-size: 24px;
+  cursor: pointer;
+  color: #888;
+}
+
+.pagina-tutorial {
+  display: none;
+}
+
+.paginacion {
+  margin-top: 25px;
+}
+
+.paginacion button {
+  background-color: #007BFF;
+  color: white;
+  border: none;
+  padding: 12px 20px;
+  margin: 0 10px;
+  border-radius: 10px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: background-color 0.2s;
+}
+
+.paginacion button:hover {
+  background-color: #0056b3;
+}
+
+  </style>
+</head>
+<body>
+  <h1>Desafío de IVA & Descuentos</h1>
+  <div id="inicio">
+    <label for="nombre">Nombre del jugador:</label>
+    <input type="text" id="nombre" required />
+    <button onclick="iniciarJuego()">Iniciar juego</button>
+  </div>
+  <div id="jugador"></div>
+  <div id="hudJuego" style="display: none;">
+  <div class="vidas" id="vidas">♥♥♥</div>
+  <div class="tiempo" id="tiempo">Tiempo: 0m 0s</div>
+  </div>
+  <div id="tablero"></div>
+  <div class="pregunta" id="pregunta"></div>
+  <div class="respuestas" id="respuestas"></div>
+  <div class="mensaje" id="mensaje"></div>
+  <button id="reiniciar">Reiniciar</button>
+
+  <div id="modal" class="modal">
+    <div class="modal-content">
+      <div id="preguntaModal"></div>
+      <div id="respuestasModal"></div>
+    </div>
+  </div>
+
+  <div id="ayuda" style="position: absolute; top: 20px; right: 20px; font-size: 24px; cursor: pointer;" title="¿Qué es el IVA?">
+  ❓
+</div>
+
+<div id="tutorialModal" class="modal">
+  <div class="modal-contenido">
+    <span id="cerrarTutorial" class="cerrar">&times;</span>
+
+    <div class="pagina-tutorial" style="display: block;">
+      <h2>📘 ¿Cómo se juega?</h2>
+      <p>¡Bienvenido al juego educativo sobre el IVA & Descuentos!</p>
+    </div>
+
+    <div class="pagina-tutorial" style="display: none;">
+      <h3>🎯 Objetivo del juego</h3>
+      <p>Responde correctamente todas las preguntas escondidas detrás de las cartas para ganar.</p>
+    </div>
+
+    <div class="pagina-tutorial" style="display: none;">
+      <h3>🕹️ ¿Cómo jugar?</h3>
+      <ul>
+        <li>Ingresa tu nombre para comenzar.</li>
+        <li>Haz clic en las cartas para responder preguntas.</li>
+        <li>Escoge la respuesta correcta. Cada error cuesta una vida.</li>
+      </ul>
+    </div>
+
+    <div class="pagina-tutorial" style="display: none;">
+      <h3>❤️ Vidas y ⏱️ Tiempo</h3>
+      <p>Tienes 3 vidas. Cada error resta una. El tiempo y tus intentos se registran en el ranking.</p>
+    </div>
+
+    <div class="pagina-tutorial" style="display: none;">
+      <h3>🏆 Ranking</h3>
+      <p>Al terminar, tus datos se guardarán en una tabla de posiciones con tu nombre, tiempo e intentos.</p>
+      <p><strong>¡Buena suerte!</strong> 🎉</p>
+    </div>
+
+    <div class="pagina-tutorial">
+  <h3>📊 Cálculos de IVA y Descuentos</h3>
+
+  <p><strong>🧮 1. Producto + IVA (19%)</strong></p>
+  <ul style="text-align: left;">
+    <li><strong>Total = Valor Base × 1.19</strong></li>
+    <li><em>Ejemplo:</em> $100.000 × 1.19 = <strong>$119.000</strong></li>
+     <li><strong>IVA = $19.000</strong></li>
+  </ul>
+
+  <p><strong>🧮 2. Producto con IVA incluido</strong></p>
+  <ul style="text-align: left;">
+    <li><strong>Valor Base = Total ÷ 1.19</strong></li>
+    <li><strong>IVA = Total - Valor Base</strong></li>
+    <li><em>Ejemplo:</em> $119.000 ÷ 1.19 = <strong>$100.000</strong></li>
+    <li><strong>BASE = $100.000</strong></li>
+    <li><strong>IVA = $19.000</strong></li>
+
+    
+  </ul>
+
+  <p><strong>🏷️ 3. Descuentos</strong></p>
+  <ul style="text-align: left;">
+    <li>Descuento es aplicado al valor base, luego se suma el IVA si es + IVA y si tiene IVA INCLUIDO entonces se saca la base.</li>
+    <li>Valor final = Precio × (1 - Descuento) × (1 - Descuento) x IVA</li>
+    <li><em>Ejemplo:</em> $100.000 + iva 19% con 30% y 10% descuento → $100.000 × (1 - 0.30) $70.000 (1 - 0.10) = $63.000 x 1.19 = <strong>$74.970</strong></li>
+  </ul>
+
+  <!-- <p><strong>🛒 4. Descuentos antes del IVA</strong></p>
+  <ul style="text-align: left;">
+    <li>Descuento aplicado al valor base, luego se suma el IVA.</li>
+    <li><strong>Valor final = (Valor Base × (1 - Desc)) × 1.19</strong></li>
+    <li><em>Ejemplo:</em> $200.000 con 15% → $200.000 × 0.85 × 1.19 = <strong>$202.300</strong></li>
+  </ul> -->
+</div>
+
+
+    <div class="paginacion">
+      <button id="anteriorTutorial">⬅️ Anterior</button>
+      <button id="siguienteTutorial">Siguiente ➡️</button>
+    </div>
+  </div>
+</div>
+
+<script>
+let paginaActual = 0;
+const paginas = document.querySelectorAll(".pagina-tutorial");
+const btnAnterior = document.getElementById("anteriorTutorial");
+const btnSiguiente = document.getElementById("siguienteTutorial");
+
+function mostrarPagina(index) {
+  paginas.forEach((p, i) => {
+    p.style.display = i === index ? "block" : "none";
+  });
+  btnAnterior.style.display = index === 0 ? "none" : "inline-block";
+  btnSiguiente.textContent = index === paginas.length - 1 ? "Finalizar" : "Siguiente ➡️";
+}
+
+btnAnterior.onclick = () => {
+  if (paginaActual > 0) {
+    paginaActual--;
+    mostrarPagina(paginaActual);
+  }
+};
+
+btnSiguiente.onclick = () => {
+  if (paginaActual < paginas.length - 1) {
+    paginaActual++;
+    mostrarPagina(paginaActual);
+  } else {
+    document.getElementById("tutorialModal").style.display = "none";
+    paginaActual = 0;
+    mostrarPagina(paginaActual);
+  }
+};
+
+mostrarPagina(paginaActual);
+</script>
+
+
+<button class="mostrarRanking" onclick="mostrarRanking()">Ver Ranking</button>
+
+<div id="modalRanking" class="modal">
+  <div class="modal-content">
+    <span class="close" onclick="document.getElementById('modalRanking').style.display='none'">&times;</span>
+    <h3>🏆 Ranking</h3>
+    <table id="tablaRanking">
+      <thead>
+        <tr><th>Nombre</th><th>Tiempo</th><th>Intentos</th><th>Fecha</th></tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+  </div>
+</div>
+
+<script>
+const iconoAyuda = document.getElementById("ayuda");
+const tutorialModal = document.getElementById("tutorialModal");
+const cerrarTutorial = document.getElementById("cerrarTutorial");
+iconoAyuda.onclick = () => tutorialModal.style.display = "flex";
+cerrarTutorial.onclick = () => tutorialModal.style.display = "none";
+</script>
+
+<!-- <script>
+document.addEventListener('contextmenu', e => e.preventDefault());
+document.addEventListener('keydown', e => {
+  if (
+    e.key === 'F12' ||                          // F12
+    (e.ctrlKey && e.shiftKey && e.key === 'I') || // Ctrl+Shift+I
+    (e.ctrlKey && e.shiftKey && e.key === 'C') || // Ctrl+Shift+C
+    (e.ctrlKey && e.shiftKey && e.key === 'J') || // Ctrl+Shift+J
+    (e.ctrlKey && e.key === 'U')                // Ctrl+U
+  ) {
+    e.preventDefault();
+    alert("🔒 Esta acción está deshabilitada.");
+  }
+});
+
+(function() {
+  const bloquearDevTools = () => {
+    setInterval(() => {
+      const start = new Date();
+      debugger;
+      if (new Date() - start > 100) {
+        document.body.innerHTML = "<h1 style='color:red; text-align:center; margin-top:50px;'>⚠️ Inspección bloqueada</h1>";
+      }
+    }, 1000);
+  };
+
+  const bloquearClicDerechoYTeclas = () => {
+    document.addEventListener("contextmenu", e => e.preventDefault());
+
+    document.addEventListener("keydown", e => {
+      if (
+        e.key === 'F12' ||
+        (e.ctrlKey && e.shiftKey && (e.key === 'I' || e.key === 'J' || e.key === 'C')) ||
+        (e.ctrlKey && e.key === 'U')
+      ) {
+        e.preventDefault();
+        alert("🚫 Acción bloqueada por seguridad");
+      }
+    });
+  };
+
+  bloquearDevTools();
+  bloquearClicDerechoYTeclas();
+})();
+</script> -->
+
+
+<script>
+const preguntasBase = [
+  { texto: "¿Cuál es el precio final de una chaqueta de $120.000 con rebajas sucesivas de 50% y 30%?", opciones: ["$60.000", "$42.000", "$36.000"], respuesta: "$42.000" },
+  { texto: "Un televisor cuesta $2.599.500 más IVA del 19%. ¿Cuál es su precio final?", opciones: ["$2.800.000", "$3.093.405", "$3.100.000"], respuesta: "$3.093.405" },
+  { texto: "Un equipo de cómputo vale $7.050.000 IVA incluido. ¿Cuál es su precio si se paga de contado con 18% de descuento?", opciones: ["$5.780.999", "$6.000.000", "$6.500.000"], respuesta: "$5.780.999" },
+  { texto: "Un celular Xiaomi cuesta $3.250.000 IVA incluido. ¿Cuál era el valor base antes del descuento del 15% aplicado antes del IVA?", opciones: ["$3.213.050", "$3.000.000", "$2.750.000"], respuesta: "$3.213.050" },
+  { texto: "Una empresa contrató diseño por $800.000 + IVA... ¿Cuánto pagó en total?", opciones: ["$824.268", "$152.000", "$952.000"], respuesta: "$952.000" },
+  { texto: "Leonardo compró unos audífonos por $476.000 con IVA incluido del 19%. ¿Cuál es el valor del IVA?", opciones: ["$56.640", "$400.000", "$76.000"], respuesta: "$76.000" },
+  { texto: "Un nuevo modelo de dron cuesta $3.250.000 IVA incluido. ¿Valor con 3% de descuento contado?", opciones: ["$3.152.500", "$2.731.092", "$2.750.000"], respuesta: "$3.152.500" },
+  { texto: "Motocicleta de $12.350.000 IVA incluido rebajada 9% y luego 10%. ¿Precio final?", opciones: ["$11.238.500", "$10.115.007", "$10.114.650"], respuesta: "$10.114.650" },
+  // Agrega aquí al menos 17 preguntas más con el mismo formato
+];
+
+let preguntas = [];
+let vidas = 3;
+let tiempo = 0;
+let intentosJugador = 1;
+let temporizador;
+let nombreJugador = "";
+let respuestasCorrectas = [];
+
+const tablero = document.getElementById('tablero');
+const vidasDiv = document.getElementById('vidas');
+const tiempoDiv = document.getElementById('tiempo');
+const jugadorDiv = document.getElementById('jugador');
+const mensajeDiv = document.getElementById('mensaje');
+const reiniciarBtn = document.getElementById('reiniciar');
+
+reiniciarBtn.onclick = () => {
+  intentosJugador++;
+  location.reload();
+};
+
+function obtenerIDJugador() {
+  let id = localStorage.getItem("idJugador");
+  if (!id) {
+    id = "jugador_" + Math.random().toString(36).substring(2, 10);
+    localStorage.setItem("idJugador", id);
+  }
+  return id;
+}
+
+const idJugador = obtenerIDJugador();
+
+function iniciarJuego() {
+  const inputNombre = document.getElementById('nombre');
+  if (!inputNombre.value.trim()) return alert("Por favor ingresa tu nombre");
+  nombreJugador = inputNombre.value.trim();
+  document.getElementById("inicio").style.display = "none";
+  document.getElementById("hudJuego").style.display = "block";
+  jugadorDiv.textContent = `Jugador: ${nombreJugador}`;
+  preguntas = mezclarArray([...preguntasBase]).slice(0, 8);
+  vidas = 3;
+  actualizarVidas();
+  tiempo = 0;
+  tiempoDiv.textContent = `Tiempo: 0m 0s`;
+  mostrarCartas();
+  temporizador = setInterval(() => {
+    tiempo++;
+    const min = Math.floor(tiempo / 60);
+    const seg = tiempo % 60;
+    tiempoDiv.textContent = `Tiempo: ${min}m ${seg}s`;
+  }, 1000);
+}
+
+function mezclarArray(arr) {
+  return arr.sort(() => Math.random() - 0.5);
+}
+
+function mostrarCartas() {
+  tablero.innerHTML = "";
+  preguntas.forEach((p, i) => {
+    const carta = document.createElement('div');
+    carta.className = 'carta';
+    carta.textContent = `Carta ${i + 1}`;
+    carta.onclick = () => mostrarPreguntaModal(p, carta);
+    tablero.appendChild(carta);
+  });
+}
+
+function actualizarVidas() {
+  vidasDiv.textContent = '♥'.repeat(vidas);
+  if (vidas === 0) finalizarJuego(false);
+}
+
+function finalizarJuego(ganado) {
+  clearInterval(temporizador);
+  const tiempoTotal = `${Math.floor(tiempo / 60)}m ${tiempo % 60}s`;
+
+  tablero.innerHTML = "";
+
+  if (ganado) {
+    mensajeDiv.innerHTML = `🎉 ¡Has ganado, ${nombreJugador}! Tiempo: ${tiempoTotal}`;
+  } else {
+    mensajeDiv.innerHTML = `😢 ¡Has perdido, ${nombreJugador}!`;
+  }
+
+  const cartasGanadas = respuestasCorrectas.length > 0
+  ? respuestasCorrectas.map((txt, idx) => `#${idx + 1}: ${txt}`).join(" | ")
+  : "Ninguna";
+
+  document.getElementById('pregunta').textContent = "Fin del juego";
+  document.getElementById('respuestas').innerHTML = "";
+  reiniciarBtn.style.display = "inline-block";
+
+  const datos = {
+    id: idJugador,
+    nombre: nombreJugador,
+    tiempo: tiempoTotal,
+    intentos: intentosJugador,
+    cartas: cartasGanadas,
+    cantidadGanadas: respuestasCorrectas.length
+  };
+
+  fetch('https://script.google.com/macros/s/AKfycbzcd9weHsFTVKklJKZYLqQ-FluVS9Cmm0FbXieQ0TqTV0h2nlttEsF4fsPVNup8-wh-IQ/exec', {
+    method: 'POST',
+    body: JSON.stringify(datos)
+  })
+  .then(() => console.log("Datos enviados al ranking"))
+  .catch(err => console.error("Error al enviar datos:", err));
+}
+
+function mostrarPreguntaModal(pregunta, cartaElemento) {
+  document.getElementById("ayuda").style.display = "none";
+  const modal = document.getElementById("modal");
+  const preguntaModal = document.getElementById("preguntaModal");
+  const respuestasModal = document.getElementById("respuestasModal");
+
+  preguntaModal.textContent = pregunta.texto;
+  respuestasModal.innerHTML = "";
+
+  const opciones = mezclarArray([...pregunta.opciones]);
+  opciones.forEach(opcion => {
+    const btn = document.createElement("button");
+    btn.textContent = opcion;
+    btn.className = "respuesta";
+    btn.onclick = () => verificarRespuestaModal(btn, opcion, pregunta.respuesta, cartaElemento, pregunta);
+    respuestasModal.appendChild(btn);
+  });
+
+  modal.style.display = "flex";
+}
+
+function verificarRespuestaModal(boton, seleccion, correcta, cartaElemento, pregunta) {
+  const modal = document.getElementById("modal");
+  if (seleccion === correcta) {
+    boton.style.backgroundColor = "green";
+    mensajeDiv.textContent = "✅ ¡Correcto!";
+    respuestasCorrectas.push(pregunta.texto);
+    cartaElemento.remove();
+    setTimeout(() => {
+      modal.style.display = "none";
+      mensajeDiv.textContent = "";
+      if (tablero.children.length === 0) finalizarJuego(true);
+    }, 1000);
+  } else {
+    boton.style.backgroundColor = "darkred";
+    mensajeDiv.textContent = "❌ ¡Incorrecto!";
+    vidas--;
+    actualizarVidas();
+    if (vidas === 0) modal.style.display = "none";
+  }
+}
+
+function mostrarRanking() {
+  fetch('https://script.google.com/macros/s/AKfycbzcd9weHsFTVKklJKZYLqQ-FluVS9Cmm0FbXieQ0TqTV0h2nlttEsF4fsPVNup8-wh-IQ/exec')
+    .then(res => res.json())
+    .then(data => {
+      const tbody = document.querySelector("#tablaRanking tbody");
+      tbody.innerHTML = "";
+      data.forEach(fila => {
+        const tr = document.createElement("tr");
+        fila.forEach(celda => {
+          const td = document.createElement("td");
+          td.textContent = celda;
+          tr.appendChild(td);
+        });
+        tbody.appendChild(tr);
+      });
+      document.getElementById("modalRanking").style.display = "flex";
+    })
+    .catch(err => console.error("Error al obtener ranking:", err));
+}
+</script>
+
+</body>
+</html>
