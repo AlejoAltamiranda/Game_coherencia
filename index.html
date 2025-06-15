@@ -1,409 +1,346 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Desafío del IVA con Cartas</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>¿Coherente o No Coherente?</title>
   <style>
     body {
-      font-family: Arial, sans-serif;
-      background-color: #f0f2f5;
-      text-align: center;
-      padding: 20px;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(to right, #74ebd5, #acb6e5);
+      margin: 0;
+      padding: 0;
+      display: flex;
+      min-height: 100vh;
+      flex-direction: column;
     }
-    #inicio {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  padding: 30px;
-  gap: 15px;
-  background-color: #f4f4f4;
-  border-radius: 16px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-  max-width: 400px;
-  margin: 40px auto;
-}
 
-#inicio input[type="text"] {
-  width: 100%;
-  padding: 12px;
-  font-size: 16px;
-  border: 2px solid #ccc;
-  border-radius: 8px;
-  outline: none;
-  transition: 0.2s;
-}
-
-#inicio input[type="text"]:focus {
-  border-color: #007BFF;
-  box-shadow: 0 0 5px #007BFF44;
-}
-
-#inicio button {
-  padding: 12px 20px;
-  font-size: 16px;
-  border: none;
-  background-color: #007BFF;
-  color: white;
-  border-radius: 8px;
-  cursor: pointer;
-  transition: background-color 0.2s ease;
-  width: 100%;
-}
-
-#inicio button:hover
+    .card {
+      background-color: white;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+      padding: 30px;
+      margin: 40px auto;
+      max-width: 600px;
+      width: 90%;
+      text-align: center;
+      transition: all 0.3s ease;
+    }
 
     h1 {
-      color: #2c3e50;
+      color: #333;
+      margin-top: 0;
+      font-size: 2rem;
+      text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
     }
-    .vidas, .tiempo {
-      font-size: 20px;
-      margin: 10px;
-    }
-    #vidas{
-        color: red;
-        font-size: 4rem;
-    }
-    #jugador {
-      font-size: 18px;
-      margin-top: 10px;
-    }
-    #tablero {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
-      gap: 15px;
-      margin: 20px auto;
-      max-width: 600px;
-    }
-    .carta {
-      background-color: #3498db;
-      color: white;
-      padding: 30px 0;
-      border-radius: 10px;
-      cursor: pointer;
-      font-size: 18px;
-      transition: background-color 0.3s;
-    }
-    .carta:hover {
-      background-color: #2980b9;
-    }
-    .pregunta, .mensaje {
-      margin: 20px 0;
-      font-size: 20px;
-    }
-    .respuestas {
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-      max-width: 400px;
-      margin: auto;
-    }
-    .respuesta {
-      background-color: #1abc9c;
-      color: white;
+
+    input[type="text"] {
       padding: 12px;
-      border: none;
-      border-radius: 5px;
-      font-size: 16px;
-      cursor: pointer;
-      margin: 10px 5px;
+      width: 80%;
+      max-width: 300px;
+      font-size: 1rem;
+      margin-top: 10px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      transition: border 0.3s ease;
     }
-    .respuesta:disabled {
-      background-color: #bdc3c7;
-      cursor: default;
+
+    input[type="text"]:focus {
+      border-color: #4a90e2;
+      outline: none;
     }
-    #reiniciar {
-      margin-top: 20px;
-      padding: 10px 20px;
-      font-size: 16px;
-      background-color: #e67e22;
+
+    button {
+      background-color: #4a90e2;
       color: white;
       border: none;
-      border-radius: 5px;
-      display: none;
+      padding: 12px 24px;
+      margin: 10px 5px;
+      border-radius: 6px;
+      font-size: 16px;
       cursor: pointer;
-      
+      transition: all 0.2s ease;
+      transform: scale(1);
     }
-    .modal {
-      display: none;
-      position: fixed;
-      z-index: 10;
-      left: 0; top: 0;
-      width: 100%; height: 100%;
-      background-color: rgba(0, 0, 0, 0.6);
-      justify-content: center;
-      align-items: center;
+
+    button:hover {
+      background-color: #357ab7;
     }
-    .modal-content {
-      background-color: white;
-      padding: 20px;
-      border-radius: 12px;
-      text-align: center;
-      width: 90%;
-      max-width: 500px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+
+    button:active {
+      transform: scale(0.98);
     }
-    .close {
-      position: absolute;
-      right: 20px;
-      top: 10px;
-      font-size: 28px;
+
+    #feedback {
+      margin-top: 15px;
+      font-size: 1.1rem;
+      min-height: 24px;
+    }
+
+    .correcto {
+      color: #2ecc71;
+    }
+
+    .incorrecto {
+      color: #e74c3c;
+    }
+
+    p {
+      font-size: 1rem;
+      margin: 10px 0;
+    }
+
+    #texto {
+      font-size: 1.1rem;
       font-weight: bold;
-      cursor: pointer;
+      margin-bottom: 20px;
+      min-height: 60px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
-   .mostrarRanking{
-          padding: 12px 20px;
-    font-size: 16px;
-    border: none;
-    background-color: #007BFF;
-    color: white;
-    border-radius: 8px;
-    cursor: pointer;
-    transition: background-color 0.2s ease;
-    width: 40%;
+
+    .stats-container {
+      display: flex;
+      justify-content: space-around;
+      flex-wrap: wrap;
     }
+
+    .stat-box {
+      margin: 5px;
+      padding: 10px;
+      background: #f8f9fa;
+      border-radius: 8px;
+      min-width: 80px;
+    }
+
+    .progress-bar {
+      height: 5px;
+      background: #e0e0e0;
+      margin: 10px 0;
+      border-radius: 5px;
+    }
+
+    .progress {
+      height: 100%;
+      border-radius: 5px;
+      background: #4a90e2;
+      transition: width 0.3s ease;
+    }
+
+    .feedback-animation {
+      animation: pulse 0.5s;
+    }
+
+    @keyframes pulse {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.05); }
+      100% { transform: scale(1); }
+    }
+
+    .hidden {
+      display: none;
+    }
+
+    /* Estilos para el ranking */
+    #ranking {
+      max-height: 300px;
+      overflow-y: auto;
+      margin: 20px 0;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    th, td {
+      padding: 10px;
+      text-align: center;
+      border-bottom: 1px solid #ddd;
+    }
+
+    th {
+      background-color: #f2f2f2;
+      position: sticky;
+      top: 0;
+    }
+
+    tr:nth-child(even) {
+      background-color: #f9f9f9;
+    }
+
     .modal {
-  display: none;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   position: fixed;
   z-index: 999;
   left: 0;
   top: 0;
   width: 100%;
   height: 100%;
-  background-color: rgba(0,0,0,0.7);
-  justify-content: center;
-  align-items: center;
+  overflow: auto;
+  background-color: rgba(0,0,0,0.6);
 }
 
-.modal-contenido {
-  background: #fff;
+.modal-content {
+  background-color: #fff;
+  padding: 20px 30px;
+  border-radius: 10px;
   width: 90%;
   max-width: 500px;
-  padding: 30px;
-  border-radius: 20px;
-  text-align: center;
-  box-shadow: 0 10px 30px rgba(0,0,0,0.3);
-  position: relative;
-  transition: transform 0.3s ease;
-  animation: slideIn 0.4s ease;
-}
-
-@keyframes slideIn {
-  from { transform: translateY(-50px); opacity: 0; }
-  to { transform: translateY(0); opacity: 1; }
+  text-align: left;
+  animation: aparecer 0.3s ease-out;
 }
 
 .cerrar {
-  position: absolute;
-  top: 15px;
-  right: 20px;
+  float: right;
   font-size: 24px;
   cursor: pointer;
-  color: #888;
+  color: #444;
 }
 
-.pagina-tutorial {
+.hidden {
   display: none;
 }
 
-.paginacion {
-  margin-top: 25px;
+footer {
+  text-align: center;
+  padding: 15px 10px;
+  font-size: 12px;
+  color: #888;
 }
 
-.paginacion button {
-  background-color: #007BFF;
-  color: white;
-  border: none;
-  padding: 12px 20px;
-  margin: 0 10px;
-  border-radius: 10px;
-  cursor: pointer;
-  font-weight: bold;
-  transition: background-color 0.2s;
+.wrapper {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center; 
+  align-items: center;
 }
 
-.paginacion button:hover {
-  background-color: #0056b3;
+
+@keyframes aparecer {
+  from { opacity: 0; transform: scale(0.95); }
+  to { opacity: 1; transform: scale(1); }
 }
 
+
+    @media (max-width: 600px) {
+      button {
+        width: 90%;
+        margin: 5px 0;
+      }
+      
+      .card {
+        padding: 20px;
+      }
+      
+      .stat-box {
+        min-width: 60px;
+        padding: 5px;
+      }
+    }
   </style>
 </head>
 <body>
-  <h1>Desafío de IVA & Descuentos</h1>
-  <div id="inicio">
-    <label for="nombre">Nombre del jugador:</label>
-    <input type="text" id="nombre" required />
-    <button onclick="iniciarJuego()">Iniciar juego</button>
-  </div>
-  <div id="jugador"></div>
-  <div id="hudJuego" style="display: none;">
-  <div class="vidas" id="vidas">♥♥♥</div>
-  <div class="tiempo" id="tiempo">Tiempo: 0m 0s</div>
-  </div>
-  <div id="tablero"></div>
-  <div class="pregunta" id="pregunta"></div>
-  <div class="respuestas" id="respuestas"></div>
-  <div class="mensaje" id="mensaje"></div>
-  <button id="reiniciar">Reiniciar</button>
-
-  <div id="modal" class="modal">
-    <div class="modal-content">
-      <div id="preguntaModal"></div>
-      <div id="respuestasModal"></div>
-    </div>
+  <div class="wrapper">
+  <div class="card" id="inicio">
+    <h1>¿Coherente o No Coherente?</h1>
+    <p>Introduce tu nombre para comenzar:</p>
+    <input type="text" id="nombreJugador" placeholder="Tu nombre">
+    <br>
+    <button id="btnComenzar">Comenzar</button>
+    <button id="btnVerRanking">Ver Ranking</button>
   </div>
 
-  <div id="ayuda" style="position: absolute; top: 20px; right: 20px; font-size: 24px; cursor: pointer;" title="¿Qué es el IVA?">
-  ❓
-</div>
-
-<div id="tutorialModal" class="modal">
-  <div class="modal-contenido">
-    <span id="cerrarTutorial" class="cerrar">&times;</span>
-
-    <div class="pagina-tutorial" style="display: block;">
-      <h2>📘 ¿Cómo se juega?</h2>
-      <p>¡Bienvenido al juego educativo sobre el IVA & Descuentos!</p>
+  <div class="card hidden" id="juego">
+    <h1>¿Coherente o No Coherente?</h1>
+    <p><strong>Jugador:</strong> <span id="jugador"></span></p>
+    <div class="progress-bar">
+      <div class="progress" id="progress" style="width: 10%"></div>
     </div>
-
-    <div class="pagina-tutorial" style="display: none;">
-      <h3>🎯 Objetivo del juego</h3>
-      <p>Responde correctamente todas las preguntas escondidas detrás de las cartas para ganar.</p>
-    </div>
-
-    <div class="pagina-tutorial" style="display: none;">
-      <h3>🕹️ ¿Cómo jugar?</h3>
-      <ul>
-        <li>Ingresa tu nombre para comenzar.</li>
-        <li>Haz clic en las cartas para responder preguntas.</li>
-        <li>Escoge la respuesta correcta. Cada error cuesta una vida.</li>
-      </ul>
-    </div>
-
-    <div class="pagina-tutorial" style="display: none;">
-      <h3>❤️ Vidas y ⏱️ Tiempo</h3>
-      <p>Tienes 3 vidas. Cada error resta una. El tiempo y tus intentos se registran en el ranking.</p>
-    </div>
-
-    <div class="pagina-tutorial" style="display: none;">
-      <h3>🏆 Ranking</h3>
-      <p>Al terminar, tus datos se guardarán en una tabla de posiciones con tu nombre, tiempo e intentos.</p>
-      <p><strong>¡Buena suerte!</strong> 🎉</p>
-    </div>
-
-    <div class="pagina-tutorial">
-  <h3>📊 Cálculos de IVA y Descuentos</h3>
-
-  <p><strong>🧮 1. Producto + IVA (19%)</strong></p>
-  <ul style="text-align: left;">
-    <li><strong>Total = Valor Base × 1.19</strong></li>
-    <li><em>Ejemplo:</em> $100.000 × 1.19 = <strong>$119.000</strong></li>
-     <li><strong>IVA = $19.000</strong></li>
-  </ul>
-
-  <p><strong>🧮 2. Producto con IVA incluido</strong></p>
-  <ul style="text-align: left;">
-    <li><strong>Valor Base = Total ÷ 1.19</strong></li>
-    <li><strong>IVA = Total - Valor Base</strong></li>
-    <li><em>Ejemplo:</em> $119.000 ÷ 1.19 = <strong>$100.000</strong></li>
-    <li><strong>BASE = $100.000</strong></li>
-    <li><strong>IVA = $19.000</strong></li>
-
+    <p id="texto"></p>
+    <button id="btnCoherente">Coherente</button>
+    <button id="btnNoCoherente">No Coherente</button>
+    <p id="feedback"></p>
     
-  </ul>
-
-  <p><strong>🏷️ 3. Descuentos</strong></p>
-  <ul style="text-align: left;">
-    <li>Descuento es aplicado al valor base, luego se suma el IVA si es + IVA y si tiene IVA INCLUIDO entonces se saca la base.</li>
-    <li>Valor final = Precio × (1 - Descuento) × (1 - Descuento) x IVA</li>
-    <li><em>Ejemplo:</em> $100.000 + iva 19% con 30% y 10% descuento → $100.000 × (1 - 0.30) $70.000 (1 - 0.10) = $63.000 x 1.19 = <strong>$74.970</strong></li>
-  </ul>
-
-  <!-- <p><strong>🛒 4. Descuentos antes del IVA</strong></p>
-  <ul style="text-align: left;">
-    <li>Descuento aplicado al valor base, luego se suma el IVA.</li>
-    <li><strong>Valor final = (Valor Base × (1 - Desc)) × 1.19</strong></li>
-    <li><em>Ejemplo:</em> $200.000 con 15% → $200.000 × 0.85 × 1.19 = <strong>$202.300</strong></li>
-  </ul> -->
-</div>
-
-
-    <div class="paginacion">
-      <button id="anteriorTutorial">⬅️ Anterior</button>
-      <button id="siguienteTutorial">Siguiente ➡️</button>
+    <div class="stats-container">
+      <div class="stat-box">
+        <strong>Puntaje</strong>
+        <div id="puntaje">0</div>
+      </div>
+      <div class="stat-box">
+        <strong>Errores</strong>
+        <div id="errores">0</div>
+      </div>
+      <div class="stat-box">
+        <strong>Racha</strong>
+        <div id="racha">0</div>
+      </div>
+      <div class="stat-box">
+        <strong>Ronda</strong>
+        <div id="ronda">1/10</div>
+      </div>
     </div>
+    
+    <button id="btnSiguiente" class="hidden">Siguiente</button>
   </div>
-</div>
 
-<script>
-let paginaActual = 0;
-const paginas = document.querySelectorAll(".pagina-tutorial");
-const btnAnterior = document.getElementById("anteriorTutorial");
-const btnSiguiente = document.getElementById("siguienteTutorial");
+  <div class="card hidden" id="ranking-container">
+    <h1>Ranking de Jugadores</h1>
+    <div id="ranking">
+      <table>
+        <thead>
+          <tr>
+            <th>Posición</th>
+            <th>Nombre</th>
+            <th>Puntaje</th>
+            <th>Errores</th>
+            <th>Resultado</th>
+            <th>Fecha</th>
+          </tr>
+        </thead>
+        <tbody id="ranking-body">
+          <!-- Los datos del ranking se cargarán aquí -->
+        </tbody>
+      </table>
+    </div>
+    <button id="btnVolver">Volver al Juego</button>
+  </div>
 
-function mostrarPagina(index) {
-  paginas.forEach((p, i) => {
-    p.style.display = i === index ? "block" : "none";
-  });
-  btnAnterior.style.display = index === 0 ? "none" : "inline-block";
-  btnSiguiente.textContent = index === paginas.length - 1 ? "Finalizar" : "Siguiente ➡️";
-}
-
-btnAnterior.onclick = () => {
-  if (paginaActual > 0) {
-    paginaActual--;
-    mostrarPagina(paginaActual);
-  }
-};
-
-btnSiguiente.onclick = () => {
-  if (paginaActual < paginas.length - 1) {
-    paginaActual++;
-    mostrarPagina(paginaActual);
-  } else {
-    document.getElementById("tutorialModal").style.display = "none";
-    paginaActual = 0;
-    mostrarPagina(paginaActual);
-  }
-};
-
-mostrarPagina(paginaActual);
-</script>
-
-
-<button class="mostrarRanking" onclick="mostrarRanking()">Ver Ranking</button>
-
-<div id="modalRanking" class="modal">
+  <!-- Modal Tutorial -->
+<div id="modalTutorial" class="modal hidden">
   <div class="modal-content">
-    <span class="close" onclick="document.getElementById('modalRanking').style.display='none'">&times;</span>
-    <h3>🏆 Ranking</h3>
-    <table id="tablaRanking">
-      <thead>
-        <tr><th>Nombre</th><th>Tiempo</th><th>Intentos</th><th>Fecha</th></tr>
-      </thead>
-      <tbody></tbody>
-    </table>
+    <span class="cerrar" id="cerrarModal">&times;</span>
+    <h2>📘 Reglas del Juego</h2>
+    <p>1️⃣ El juego consiste en leer textos y decidir si son <strong>coherentes</strong> o <strong>no coherentes</strong>.</p>
+    <p>2️⃣ Si aciertas, ganas puntos (+20), y si cometes errores, pierdes puntos (-10).</p>
+    <p>3️⃣ Cada 3 aciertos consecutivos ganas puntos extra.</p>
+    <p>4️⃣ El juego termina cuando acumulas 5 errores ❌ o completas 10 rondas ✅.</p>
+    <p>5️⃣ ¡Tu resultado se guarda en el ranking final!</p>
+    <p>🔁 Puedes volver a jugar las veces que quieras.</p>
   </div>
 </div>
 
-<script>
-const iconoAyuda = document.getElementById("ayuda");
-const tutorialModal = document.getElementById("tutorialModal");
-const cerrarTutorial = document.getElementById("cerrarTutorial");
-iconoAyuda.onclick = () => tutorialModal.style.display = "flex";
-cerrarTutorial.onclick = () => tutorialModal.style.display = "none";
-</script>
+<span id="btnTutorial" title="Ver tutorial" style="position: absolute; top: 10px; right: 10px; cursor: pointer; font-size: 24px;">❓</span>
+</div>
+<footer style="text-align: center; padding: 10px; font-size: 12px; color: #888;">
+  © 2025. Hecho con ❤️ por Alejandro Altamiranda. Todos los derechos reservados.
+</footer>
 
-<!-- <script>
+<script>
 document.addEventListener('contextmenu', e => e.preventDefault());
 document.addEventListener('keydown', e => {
   if (
-    e.key === 'F12' ||                          // F12
-    (e.ctrlKey && e.shiftKey && e.key === 'I') || // Ctrl+Shift+I
-    (e.ctrlKey && e.shiftKey && e.key === 'C') || // Ctrl+Shift+C
-    (e.ctrlKey && e.shiftKey && e.key === 'J') || // Ctrl+Shift+J
-    (e.ctrlKey && e.key === 'U')                // Ctrl+U
+    e.key === 'F12' ||                          
+    (e.ctrlKey && e.shiftKey && e.key === 'I') || 
+    (e.ctrlKey && e.shiftKey && e.key === 'C') || 
+    (e.ctrlKey && e.shiftKey && e.key === 'J') || 
+    (e.ctrlKey && e.key === 'U')                
   ) {
     e.preventDefault();
     alert("🔒 Esta acción está deshabilitada.");
@@ -439,193 +376,346 @@ document.addEventListener('keydown', e => {
   bloquearDevTools();
   bloquearClicDerechoYTeclas();
 })();
-</script> -->
+</script>
+
+<script>
+  document.addEventListener('contextmenu', function(e) {
+    e.preventDefault();
+  });
+
+  document.addEventListener('keydown', function(e) {
+    if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'c') {
+      e.preventDefault();
+    }
+  });
+
+  document.addEventListener('copy', function(e) {
+    e.preventDefault();
+  });
+
+  document.addEventListener('copy', function(e) {
+    alert("Copiar texto no está permitido.");
+    e.preventDefault();
+  });
+</script>
 
 
 <script>
-const preguntasBase = [
-  { texto: "¿Cuál es el precio final de una chaqueta de $120.000 con rebajas sucesivas de 50% y 30%?", opciones: ["$60.000", "$42.000", "$36.000"], respuesta: "$42.000" },
-  { texto: "Un televisor cuesta $2.599.500 más IVA del 19%. ¿Cuál es su precio final?", opciones: ["$2.800.000", "$3.093.405", "$3.100.000"], respuesta: "$3.093.405" },
-  { texto: "Un equipo de cómputo vale $7.050.000 IVA incluido. ¿Cuál es su precio si se paga de contado con 18% de descuento?", opciones: ["$5.780.999", "$6.000.000", "$6.500.000"], respuesta: "$5.780.999" },
-  { texto: "Un celular Xiaomi cuesta $3.250.000 IVA incluido. ¿Cuál era el valor base antes del descuento del 15% aplicado antes del IVA?", opciones: ["$3.213.050", "$3.000.000", "$2.750.000"], respuesta: "$3.213.050" },
-  { texto: "Una empresa contrató diseño por $800.000 + IVA... ¿Cuánto pagó en total?", opciones: ["$824.268", "$152.000", "$952.000"], respuesta: "$952.000" },
-  { texto: "Leonardo compró unos audífonos por $476.000 con IVA incluido del 19%. ¿Cuál es el valor del IVA?", opciones: ["$56.640", "$400.000", "$76.000"], respuesta: "$76.000" },
-  { texto: "Un nuevo modelo de dron cuesta $3.250.000 IVA incluido. ¿Valor con 3% de descuento contado?", opciones: ["$3.152.500", "$2.731.092", "$2.750.000"], respuesta: "$3.152.500" },
-  { texto: "Motocicleta de $12.350.000 IVA incluido rebajada 9% y luego 10%. ¿Precio final?", opciones: ["$11.238.500", "$10.115.007", "$10.114.650"], respuesta: "$10.114.650" },
-  // Agrega aquí al menos 17 preguntas más con el mismo formato
-];
+  document.getElementById("btnTutorial").addEventListener("click", () => {
+  document.getElementById("modalTutorial").classList.remove("hidden");
+});
 
-let preguntas = [];
-let vidas = 3;
-let tiempo = 0;
-let intentosJugador = 1;
-let temporizador;
-let nombreJugador = "";
-let respuestasCorrectas = [];
+document.getElementById("cerrarModal").addEventListener("click", () => {
+  document.getElementById("modalTutorial").classList.add("hidden");
+});
 
-const tablero = document.getElementById('tablero');
-const vidasDiv = document.getElementById('vidas');
-const tiempoDiv = document.getElementById('tiempo');
-const jugadorDiv = document.getElementById('jugador');
-const mensajeDiv = document.getElementById('mensaje');
-const reiniciarBtn = document.getElementById('reiniciar');
-
-reiniciarBtn.onclick = () => {
-  intentosJugador++;
-  location.reload();
-};
-
-function obtenerIDJugador() {
-  let id = localStorage.getItem("idJugador");
-  if (!id) {
-    id = "jugador_" + Math.random().toString(36).substring(2, 10);
-    localStorage.setItem("idJugador", id);
+// Opcional: cerrar al hacer clic fuera del modal
+window.addEventListener("click", function(event) {
+  const modal = document.getElementById("modalTutorial");
+  if (event.target === modal) {
+    modal.classList.add("hidden");
   }
-  return id;
-}
+});
 
-const idJugador = obtenerIDJugador();
-
-function iniciarJuego() {
-  const inputNombre = document.getElementById('nombre');
-  if (!inputNombre.value.trim()) return alert("Por favor ingresa tu nombre");
-  nombreJugador = inputNombre.value.trim();
-  document.getElementById("inicio").style.display = "none";
-  document.getElementById("hudJuego").style.display = "block";
-  jugadorDiv.textContent = `Jugador: ${nombreJugador}`;
-  preguntas = mezclarArray([...preguntasBase]).slice(0, 8);
-  vidas = 3;
-  actualizarVidas();
-  tiempo = 0;
-  tiempoDiv.textContent = `Tiempo: 0m 0s`;
-  mostrarCartas();
-  temporizador = setInterval(() => {
-    tiempo++;
-    const min = Math.floor(tiempo / 60);
-    const seg = tiempo % 60;
-    tiempoDiv.textContent = `Tiempo: ${min}m ${seg}s`;
-  }, 1000);
-}
-
-function mezclarArray(arr) {
-  return arr.sort(() => Math.random() - 0.5);
-}
-
-function mostrarCartas() {
-  tablero.innerHTML = "";
-  preguntas.forEach((p, i) => {
-    const carta = document.createElement('div');
-    carta.className = 'carta';
-    carta.textContent = `Carta ${i + 1}`;
-    carta.onclick = () => mostrarPreguntaModal(p, carta);
-    tablero.appendChild(carta);
-  });
-}
-
-function actualizarVidas() {
-  vidasDiv.textContent = '♥'.repeat(vidas);
-  if (vidas === 0) finalizarJuego(false);
-}
-
-function finalizarJuego(ganado) {
-  clearInterval(temporizador);
-  const tiempoTotal = `${Math.floor(tiempo / 60)}m ${tiempo % 60}s`;
-
-  tablero.innerHTML = "";
-
-  if (ganado) {
-    mensajeDiv.innerHTML = `🎉 ¡Has ganado, ${nombreJugador}! Tiempo: ${tiempoTotal}`;
-  } else {
-    mensajeDiv.innerHTML = `😢 ¡Has perdido, ${nombreJugador}!`;
-  }
-
-  const cartasGanadas = respuestasCorrectas.length > 0
-  ? respuestasCorrectas.map((txt, idx) => `#${idx + 1}: ${txt}`).join(" | ")
-  : "Ninguna";
-
-  document.getElementById('pregunta').textContent = "Fin del juego";
-  document.getElementById('respuestas').innerHTML = "";
-  reiniciarBtn.style.display = "inline-block";
-
-  const datos = {
-    id: idJugador,
-    nombre: nombreJugador,
-    tiempo: tiempoTotal,
-    intentos: intentosJugador,
-    cartas: cartasGanadas,
-    cantidadGanadas: respuestasCorrectas.length
-  };
-
-  fetch('https://script.google.com/macros/s/AKfycbzcd9weHsFTVKklJKZYLqQ-FluVS9Cmm0FbXieQ0TqTV0h2nlttEsF4fsPVNup8-wh-IQ/exec', {
-    method: 'POST',
-    body: JSON.stringify(datos)
-  })
-  .then(() => console.log("Datos enviados al ranking"))
-  .catch(err => console.error("Error al enviar datos:", err));
-}
-
-function mostrarPreguntaModal(pregunta, cartaElemento) {
-  document.getElementById("ayuda").style.display = "none";
-  const modal = document.getElementById("modal");
-  const preguntaModal = document.getElementById("preguntaModal");
-  const respuestasModal = document.getElementById("respuestasModal");
-
-  preguntaModal.textContent = pregunta.texto;
-  respuestasModal.innerHTML = "";
-
-  const opciones = mezclarArray([...pregunta.opciones]);
-  opciones.forEach(opcion => {
-    const btn = document.createElement("button");
-    btn.textContent = opcion;
-    btn.className = "respuesta";
-    btn.onclick = () => verificarRespuestaModal(btn, opcion, pregunta.respuesta, cartaElemento, pregunta);
-    respuestasModal.appendChild(btn);
-  });
-
-  modal.style.display = "flex";
-}
-
-function verificarRespuestaModal(boton, seleccion, correcta, cartaElemento, pregunta) {
-  const modal = document.getElementById("modal");
-  if (seleccion === correcta) {
-    boton.style.backgroundColor = "green";
-    mensajeDiv.textContent = "✅ ¡Correcto!";
-    respuestasCorrectas.push(pregunta.texto);
-    cartaElemento.remove();
-    setTimeout(() => {
-      modal.style.display = "none";
-      mensajeDiv.textContent = "";
-      if (tablero.children.length === 0) finalizarJuego(true);
-    }, 1000);
-  } else {
-    boton.style.backgroundColor = "darkred";
-    mensajeDiv.textContent = "❌ ¡Incorrecto!";
-    vidas--;
-    actualizarVidas();
-    if (vidas === 0) modal.style.display = "none";
-  }
-}
-
-function mostrarRanking() {
-  fetch('https://script.google.com/macros/s/AKfycbzcd9weHsFTVKklJKZYLqQ-FluVS9Cmm0FbXieQ0TqTV0h2nlttEsF4fsPVNup8-wh-IQ/exec')
-    .then(res => res.json())
-    .then(data => {
-      const tbody = document.querySelector("#tablaRanking tbody");
-      tbody.innerHTML = "";
-      data.forEach(fila => {
-        const tr = document.createElement("tr");
-        fila.forEach(celda => {
-          const td = document.createElement("td");
-          td.textContent = celda;
-          tr.appendChild(td);
-        });
-        tbody.appendChild(tr);
-      });
-      document.getElementById("modalRanking").style.display = "flex";
-    })
-    .catch(err => console.error("Error al obtener ranking:", err));
-}
 </script>
 
+
+  <script>
+    const Juego = {
+      SCRIPT_URL: "https://script.google.com/macros/s/AKfycbwkWLiv9VvpzptT43t1rlgTJJgb5o9ATGZNRngi9Uhbawz2dv4Y-K7jO18qRcF2Omfo/exec",
+      
+      textos: [
+        { texto: "Muchas bebidas alcohólicas son resultado de la fermentación. La cerveza sufre este proceso durante 10 días.", coherente: true },
+        { texto: "Mi gato duerme mucho. Me gusta el helado de chocolate.", coherente: false },
+        { texto: "El perro de mi hermano es muy bravo, por eso me mordió ayer en la pierna.", coherente: true },
+        { texto: "Ayer llovió mucho. Mi profesor se llama Luis. Voy a estudiar medicina.", coherente: false },
+        { texto: "Los niños juegan en el parque. También corren y montan bicicleta.", coherente: true },
+        { texto: "Me gusta el arroz con pollo. Las nubes son muy esponjosas. El teléfono sonó.", coherente: false },
+        { texto: "El calentamiento global derrite los polos. Los osos polares pierden su hábitat.", coherente: true },
+        { texto: "Los pájaros vuelan. Mi computadora es azul. Hoy es martes.", coherente: false },
+        { texto: "Para hacer pan necesitas harina, agua, levadura y sal. La mezcla debe reposar antes de hornear.", coherente: true },
+        { texto: "El verano es caluroso. Tengo 3 lápices. La música es arte.", coherente: false },
+        { texto: "El sol calienta la Tierra. Sin él, la vida no sería posible.", "coherente": true },
+        { texto: "Mi coche es rojo. Las flores huelen bien. El cielo está nublado.", "coherente": false },
+        { texto: "Necesito estudiar para el examen de mañana. Es muy importante sacar una buena nota.", "coherente": true },
+        { texto: "El café me despierta. Los perros ladran fuerte. Las montañas son altas.", "coherente": false },
+        { texto: "La luna es el satélite natural de la Tierra. Gira a su alrededor.", "coherente": true },
+        { texto: "Me gusta leer libros. El agua es transparente. Los árboles tienen hojas.", "coherente": false },
+        { texto: "Si comes muchas golosinas, puedes enfermarte. Es mejor optar por alimentos saludables.", "coherente": true },
+        { texto: "Los peces nadan en el agua. La mesa es de madera. El tiempo vuela.", "coherente": false },
+        { texto: "Para cocinar este plato, primero debes picar las verduras. Luego, las salteas en una sartén.", "coherente": true },
+        { texto: "Mi hermana tiene un gato. El ajedrez es un juego de estrategia. La ciudad es grande.", "coherente": false },
+        { texto: "La tecnología avanza rápidamente. Constantemente surgen nuevas innovaciones.", "coherente": true },
+        { texto: "El mar es inmenso. Tengo sed. Los relojes dan la hora.", "coherente": false }
+      ],
+      
+      estado: {
+        indiceActual: 0,
+        puntaje: 0,
+        errores: 0,
+        ronda: 1,
+        aciertosSeguidos: 0,
+        nombreJugador: "",
+        textoRespondido: false,
+        resultadoFinal: ""
+      },
+      
+      init: function() {
+        this.cacheDOM();
+        this.bindEvents();
+        this.mezclarTextos();
+      },
+      
+      cacheDOM: function() {
+        this.dom = {
+          inicio: document.getElementById("inicio"),
+          juego: document.getElementById("juego"),
+          rankingContainer: document.getElementById("ranking-container"),
+          nombreInput: document.getElementById("nombreJugador"),
+          jugador: document.getElementById("jugador"),
+          texto: document.getElementById("texto"),
+          feedback: document.getElementById("feedback"),
+          puntaje: document.getElementById("puntaje"),
+          errores: document.getElementById("errores"),
+          racha: document.getElementById("racha"),
+          ronda: document.getElementById("ronda"),
+          progress: document.getElementById("progress"),
+          btnComenzar: document.getElementById("btnComenzar"),
+          btnCoherente: document.getElementById("btnCoherente"),
+          btnNoCoherente: document.getElementById("btnNoCoherente"),
+          btnSiguiente: document.getElementById("btnSiguiente"),
+          btnVerRanking: document.getElementById("btnVerRanking"),
+          btnVolver: document.getElementById("btnVolver"),
+          rankingBody: document.getElementById("ranking-body")
+        };
+      },
+      
+      bindEvents: function() {
+        this.dom.btnComenzar.addEventListener("click", this.iniciar.bind(this));
+        this.dom.nombreInput.addEventListener("keypress", (e) => {
+          if (e.key === "Enter") this.iniciar();
+        });
+        this.dom.btnCoherente.addEventListener("click", () => this.responder(true));
+        this.dom.btnNoCoherente.addEventListener("click", () => this.responder(false));
+        this.dom.btnSiguiente.addEventListener("click", this.siguienteTexto.bind(this));
+        this.dom.btnVerRanking.addEventListener("click", this.mostrarRanking.bind(this));
+        this.dom.btnVolver.addEventListener("click", this.volverAlInicio.bind(this));
+      },
+      
+      mezclarTextos: function() {
+        // Algoritmo Fisher-Yates para mezclar los textos
+        for (let i = this.textos.length - 1; i > 0; i--) {
+          const j = Math.floor(Math.random() * (i + 1));
+          [this.textos[i], this.textos[j]] = [this.textos[j], this.textos[i]];
+        }
+      },
+      
+      iniciar: function() {
+        const nombre = this.dom.nombreInput.value.trim();
+        if (!nombre) {
+          alert("Por favor ingresa tu nombre.");
+          return;
+        }
+        
+        this.estado.nombreJugador = nombre;
+        this.dom.jugador.textContent = nombre;
+        this.dom.inicio.classList.add("hidden");
+        this.dom.juego.classList.remove("hidden");
+        
+        this.mostrarTexto();
+      },
+      
+      mostrarTexto: function() {
+        this.estado.textoRespondido = false;
+        this.dom.texto.textContent = this.textos[this.estado.indiceActual].texto;
+        this.dom.feedback.textContent = "";
+        this.dom.btnSiguiente.classList.add("hidden");
+        this.dom.btnCoherente.disabled = false;
+        this.dom.btnNoCoherente.disabled = false;
+        this.actualizarProgreso();
+      },
+      
+      responder: function(eleccion) {
+        if (this.estado.textoRespondido) return;
+        this.estado.textoRespondido = true;
+        
+        const esCorrecto = this.textos[this.estado.indiceActual].coherente === eleccion;
+        let puntosGanados = 0;
+        
+        if (esCorrecto) {
+          this.estado.aciertosSeguidos++;
+          puntosGanados = 20 + (Math.floor(this.estado.aciertosSeguidos / 3) * 5);
+          this.mostrarFeedback(`¡Correcto! +${puntosGanados} puntos`, "correcto");
+        } else {
+          this.estado.aciertosSeguidos = 0;
+          this.estado.errores++;
+          puntosGanados = -10;
+          this.mostrarFeedback(
+            `Incorrecto. El texto era ${this.textos[this.estado.indiceActual].coherente ? "coherente" : "no coherente"}. -10 puntos`, 
+            "incorrecto"
+          );
+        }
+        
+        this.estado.puntaje += puntosGanados;
+        this.actualizarEstado();
+        
+        this.dom.btnCoherente.disabled = true;
+        this.dom.btnNoCoherente.disabled = true;
+        this.dom.btnSiguiente.classList.remove("hidden");
+        
+        if (this.estado.errores >= 5) {
+          this.estado.resultadoFinal = "Perdió";
+          setTimeout(() => this.finalizarJuego("Juego terminado por demasiados errores."), 800);
+          return;
+        }
+        
+        if (this.estado.ronda >= 10) {
+          this.estado.resultadoFinal = "Ganó";
+          setTimeout(() => this.finalizarJuego("¡Juego completado!"), 800);
+          return;
+        }
+      },
+      
+      siguienteTexto: function() {
+        this.estado.ronda++;
+        this.estado.indiceActual = (this.estado.indiceActual + 1) % this.textos.length;
+        this.mostrarTexto();
+      },
+      
+      mostrarFeedback: function(mensaje, tipo) {
+        this.dom.feedback.textContent = mensaje;
+        this.dom.feedback.className = tipo;
+        this.dom.feedback.classList.add("feedback-animation");
+        
+        setTimeout(() => {
+          this.dom.feedback.classList.remove("feedback-animation");
+        }, 500);
+      },
+      
+      actualizarEstado: function() {
+        this.dom.puntaje.textContent = this.estado.puntaje;
+        this.dom.errores.textContent = this.estado.errores;
+        this.dom.racha.textContent = this.estado.aciertosSeguidos;
+        this.dom.ronda.textContent = `${this.estado.ronda}/10`;
+      },
+      
+      actualizarProgreso: function() {
+        const porcentaje = (this.estado.ronda / 10) * 100;
+        this.dom.progress.style.width = `${porcentaje}%`;
+      },
+      
+      finalizarJuego: function(mensaje) {
+        this.guardarResultado();
+        alert(`${mensaje}\nPuntaje final de ${this.estado.nombreJugador}: ${this.estado.puntaje}`);
+        this.reiniciar();
+      },
+      
+      guardarResultado: function() {
+        const data = {
+          nombre: this.estado.nombreJugador,
+          errores: this.estado.errores,
+          puntaje: this.estado.puntaje,
+          resultado: this.estado.resultadoFinal,
+          fecha: new Date().toISOString()
+        };
+        
+        fetch(this.SCRIPT_URL, {
+          method: "POST",
+          mode: "no-cors",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(data)
+        })
+        .catch(error => console.error("Error al guardar resultado:", error));
+      },
+      
+      mostrarRanking: function() {
+        this.dom.inicio.classList.add("hidden");
+        this.dom.rankingContainer.classList.remove("hidden");
+        this.cargarRanking();
+      },
+
+cargarRanking: function () {
+  fetch(this.SCRIPT_URL + '?action=getRanking', {
+    method: 'GET',
+    mode: 'cors'
+  })
+    .then(response => {
+      if (!response.ok) throw new Error("Respuesta no válida");
+      return response.json();
+    })
+    .then(data => {
+      this.dom.rankingBody.innerHTML = "";
+
+      // Validar si hubo éxito en la respuesta
+      if (data.success && data.data.length > 0) {
+        const ranking = data.data;
+
+        // Ordenar por puntaje descendente
+        ranking.sort((a, b) => b.puntaje - a.puntaje);
+
+        ranking.slice(0, 20).forEach((jugador, index) => {
+          const row = document.createElement("tr");
+          row.innerHTML = `
+            <td>${index + 1}</td>
+            <td>${jugador.nombre}</td>
+            <td>${jugador.puntaje}</td>
+            <td>${jugador.errores}</td>
+            <td>${jugador.resultado}</td>
+            <td>${jugador.fecha}</td>
+          `;
+          this.dom.rankingBody.appendChild(row);
+        });
+      } else {
+        this.dom.rankingBody.innerHTML = `
+          <tr><td colspan="6">No hay datos disponibles</td></tr>
+        `;
+      }
+    })
+    .catch(error => {
+      console.error("Error al cargar el ranking:", error);
+      this.mostrarMensajeError();
+    });
+},
+
+mostrarMensajeError: function() {
+  this.dom.rankingBody.innerHTML = `
+    <tr>
+      <td colspan="5">Error al cargar el ranking. Intenta recargar la página.</td>
+    </tr>
+  `;
+},
+      
+   
+      
+      volverAlInicio: function() {
+        this.dom.rankingContainer.classList.add("hidden");
+        this.dom.inicio.classList.remove("hidden");
+      },
+      
+      reiniciar: function() {
+        this.estado = {
+          indiceActual: 0,
+          puntaje: 0,
+          errores: 0,
+          ronda: 1,
+          aciertosSeguidos: 0,
+          nombreJugador: "",
+          textoRespondido: false,
+          resultadoFinal: ""
+        };
+        
+        this.mezclarTextos();
+        this.actualizarEstado();
+        this.dom.juego.classList.add("hidden");
+        this.dom.inicio.classList.remove("hidden");
+        this.dom.nombreInput.value = "";
+        this.dom.nombreInput.focus();
+      }
+    };
+    
+    document.addEventListener("DOMContentLoaded", () => Juego.init());
+  </script>
 </body>
 </html>
